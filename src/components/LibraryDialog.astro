@@ -20,10 +20,10 @@ const { title, groups, chapters, currentChapter = 0, basePath = '' } = Astro.pro
       type="button"
       data-close="chapter-menu"
       class="icon-button"
-      aria-label="关闭目录与书签"
+      aria-label="关闭"
     >×</button>
   </div>
-  <div class="library-tabs" role="tablist" aria-label="阅读记录">
+  <div class="library-tabs" role="tablist" aria-label="目录与书签">
     <button
       id="tab-chapters"
       role="tab"
@@ -43,11 +43,11 @@ const { title, groups, chapters, currentChapter = 0, basePath = '' } = Astro.pro
     >书签 <span id="bookmark-count"></span></button>
   </div>
   <section id="panel-chapters" role="tabpanel" aria-labelledby="tab-chapters">
-    <label class="sr-only" for="chapter-search">搜索章节名称或序号</label>
+    <label class="sr-only" for="chapter-search">搜索章节</label>
     <input
       id="chapter-search"
       type="search"
-      placeholder="搜索章节名称或序号"
+      placeholder="搜索章节..."
       autocomplete="off"
     />
     <nav aria-label="章节目录">
@@ -58,7 +58,7 @@ const { title, groups, chapters, currentChapter = 0, basePath = '' } = Astro.pro
         basePath={basePath}
       />
     </nav>
-    <p id="no-chapters" class="empty-note" hidden>没有找到匹配的章节</p>
+    <p id="no-chapters" class="empty-note" hidden>未找到匹配章节</p>
   </section>
   <section id="panel-bookmarks" role="tabpanel" aria-labelledby="tab-bookmarks" hidden>
     <div id="bookmark-list"></div>

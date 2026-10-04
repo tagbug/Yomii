@@ -30,7 +30,7 @@ const homeUrl = `${novel.basePath}/`;
 <Layout
   pageTitle={`${chapter.heading} · ${novel.title}`}
   siteName={novel.siteName}
-  description={`${novel.title}，${novel.totalChapters}话。简洁阅读、章节目录、书签与TXT下载。`}
+  description={`${chapter.heading} - ${novel.title}`}
   bodyClass="reader"
   bookId={novel.bookId}
   totalChapters={novel.totalChapters}
@@ -67,14 +67,14 @@ const homeUrl = `${novel.basePath}/`;
         class="quiet-button"
         type="button"
         id="bookmark"
-        title="保存当前位置，在目录中查看书签"
+        title="添加书签"
       >书签</button>
       <button
         class="quiet-button"
         type="button"
         id="focus-toggle"
         aria-pressed="false"
-        title="专注阅读（F）"
+        title="专注模式（F）"
       >专注</button>
       <button
         class="quiet-button settings-trigger"
@@ -130,14 +130,13 @@ const homeUrl = `${novel.basePath}/`;
       }
     </nav>
 
-    <p class="reading-status" id="reading-status">阅读进度自动保存</p>
     <SiteFooter siteName={novel.siteName} />
   </main>
 
   <button id="exit-focus" class="quiet-button" type="button" aria-label="退出专注模式">
     退出专注
   </button>
-  <button id="back-top" class="quiet-button" type="button" hidden aria-label="返回本话开头">
+  <button id="back-top" class="quiet-button" type="button" hidden aria-label="返回顶部">
     顶部
   </button>
 </Layout>

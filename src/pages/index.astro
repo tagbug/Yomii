@@ -13,7 +13,7 @@ const homeUrl = `${novel.basePath}/`;
 <Layout
   pageTitle={novel.title}
   siteName={novel.siteName}
-  description={`${novel.title}，${novel.totalChapters}话。简洁阅读、章节目录、书签与TXT下载。`}
+  description={`${novel.title}${novel.author ? ` · ${novel.author}` : ''} 在线阅读`}
   bodyClass="home"
   bookId={novel.bookId}
   totalChapters={novel.totalChapters}

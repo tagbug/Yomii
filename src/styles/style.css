@@ -406,13 +406,6 @@ input:focus-visible {
   opacity: 0.35;
 }
 
-.reading-status {
-  font-size: 12px;
-  text-align: center;
-  color: var(--subtle);
-  margin: 18px 0 0;
-}
-
 .scroll-progress {
   position: fixed;
   height: 2px;
@@ -731,7 +724,6 @@ input[type="search"]::placeholder {
 
 :root[data-focus="true"] .reader-toolbar,
 :root[data-focus="true"] .reader .site-footer,
-:root[data-focus="true"] .reader .reading-status,
 :root[data-focus="true"] .reader #back-top {
   display: none;
 }
@@ -874,8 +866,7 @@ input[type="search"]::placeholder {
   #exit-focus,
   #back-top,
   dialog,
-  .toast,
-  .reading-status {
+  .toast {
     display: none !important;
   }
   body {

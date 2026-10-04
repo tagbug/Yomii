@@ -250,7 +250,7 @@ interface Bookmark extends Position {
     if (!bookmarks.length) {
       const p = document.createElement('p');
       p.className = 'empty-note';
-      p.textContent = '还没有书签。阅读时点“书签”保存当前位置。';
+      p.textContent = '暂无书签';
       list.appendChild(p);
       return;
     }
@@ -297,7 +297,7 @@ interface Bookmark extends Position {
         remove.addEventListener('click', () => {
           const remaining = bookmarks.filter((x) => x.id !== b.id);
           if (!api.write(bookmarksKey, remaining)) {
-            notify('此浏览器无法保存书签');
+            notify('无法保存书签');
             return;
           }
           bookmarks = remaining;
@@ -549,13 +549,7 @@ interface Bookmark extends Position {
 
   function persist() {
     if (!ready || document.querySelector('dialog[open]')) return;
-    const ok = api.write(progressKey, capture());
-    const statusEl = $('reading-status');
-    if (statusEl) {
-      statusEl.textContent = ok
-        ? '阅读进度自动保存'
-        : '此浏览器无法保存进度，仍可正常阅读';
-    }
+    api.write(progressKey, capture());
   }
 
   function update() {
@@ -672,12 +666,12 @@ interface Bookmark extends Position {
     };
     const next = [item, ...bookmarks.filter((b) => b.id !== item.id)];
     if (!api.write(bookmarksKey, next)) {
-      notify('此浏览器无法保存书签');
+      notify('无法保存书签');
       return;
     }
     bookmarks = next;
     renderBookmarks();
-    notify(existing ? '书签已更新' : '已保存书签，可在目录中查看');
+    notify(existing ? '书签已更新' : '已添加书签');
   });
 
   document.addEventListener('keydown', (e: KeyboardEvent) => {
