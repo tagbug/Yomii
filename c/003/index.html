@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'"><meta name="description" content="第3话 灯亮起来的时候 - 风经过的地方"><meta name="color-scheme" content="light dark"><title>第3话 灯亮起来的时候 · 风经过的地方 · Yomii</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%235265a5%22%2F%3E%3Cpath%20d%3D%22M8%207h12a4%204%200%200%201%204%204v15H12a4%204%200%200%201-4-4V7Zm4%200v19%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%2F%3E%3Cpath%20d%3D%22M16%2012h5m-5%205h5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.5%22%2F%3E%3C%2Fsvg%3E"><!-- Synchronous preferences initialization to avoid FOUC --><script>
+      (() => {
+        'use strict';
+        const defaults = { theme: 'auto', size: 20, line: 1.9, width: 720, font: 'serif', focus: false };
+        const fonts = {
+          serif: '"Noto Serif CJK SC","Source Han Serif SC","Songti SC",SimSun,serif',
+          sans: '"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif',
+        };
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const safeNumber = (n, low, high, fallback) =>
+          typeof n === 'number' && Number.isFinite(n) ? Math.max(low, Math.min(high, n)) : fallback;
+        function normalize(v = {}) {
+          if (!v || typeof v !== 'object') v = {};
+          return {
+            theme: ['auto', 'light', 'paper', 'dark'].includes(v.theme) ? v.theme : defaults.theme,
+            size: safeNumber(v.size, 16, 30, 20),
+            line: safeNumber(v.line, 1.5, 2.5, 1.9),
+            width: safeNumber(v.width, 560, 960, 720),
+            font: v.font === 'sans' ? 'sans' : 'serif',
+            focus: v.focus === true,
+          };
+        }
+        function read(key) {
+          try {
+            return JSON.parse(localStorage.getItem(key));
+          } catch {
+            return null;
+          }
+        }
+        function write(key, value) {
+          try {
+            localStorage.setItem(key, JSON.stringify(value));
+            return true;
+          } catch {
+            return false;
+          }
+        }
+        function apply(value) {
+          const p = normalize(value),
+            root = document.documentElement;
+          root.dataset.theme = p.theme === 'auto' ? (systemTheme.matches ? 'dark' : 'light') : p.theme;
+          root.dataset.focus = String(p.focus);
+          root.style.setProperty('--reader-size', `${p.size}px`);
+          root.style.setProperty('--reader-line', String(p.line));
+          root.style.setProperty('--reader-width', `${p.width}px`);
+          root.style.setProperty('--reader-font', fonts[p.font]);
+          return p;
+        }
+        const api = (window.ReaderPreferences = { defaults, read, write, normalize, apply });
+        api.current = apply(read('yomii-preferences-v1'));
+        systemTheme.addEventListener('change', () => {
+          if (api.current.theme === 'auto') apply(api.current);
+        });
+      })();
+    </script><link rel="stylesheet" href="/_astro/novel.B_Yxs2_Z.css"></head><body class="reader" data-base-path data-total-chapters="3" data-book-id="ead298bf9e7b" data-chapter="3" data-chapter-title="第3话 灯亮起来的时候"><a class="skip-link" href="#story">跳到正文</a><div class="scroll-progress" role="progressbar" aria-label="本话阅读进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="progress-bar"></div></div><header class="reader-toolbar"><div class="toolbar-left"><a class="toolbar-home brand" href="/">Yomii</a><button class="quiet-button" type="button" data-open="chapter-menu">目录</button><span id="chapter-progress" class="toolbar-progress">3 / 3 · 0%</span></div><div class="toolbar-actions"><button class="quiet-button" type="button" id="bookmark" title="添加书签">书签</button><button class="quiet-button" type="button" id="focus-toggle" aria-pressed="false" title="专注模式（F）">专注</button><button class="quiet-button settings-trigger" type="button" data-open="settings" aria-label="阅读设置">Aa</button></div></header><main id="main" class="reading-main"><div class="chapter-heading"><p class="chapter-index">第 03 话</p><h1>灯亮起来的时候</h1><span class="chapter-meta">559 字 · 约 1 分钟</span></div><article id="story" class="story" aria-label="第3话 灯亮起来的时候"><p id="p-0" data-paragraph="0">　回到小屋，窗台上落着一小片树叶。林舟没有关好窗，风把它送进来，又把窗帘轻轻吹起。</p><p id="p-1" data-paragraph="1">　他把诗集放在桌上，先拆开装厨具的箱子。一个碗，两双筷子，一口旧锅。它们排在水槽旁边，像几位终于找到座位的旅客。</p><p id="p-2" data-paragraph="2">　晚饭很简单。他煮了面，放进青菜和一颗鸡蛋。水汽升起来的时候，玻璃上映出了他的脸，也映出了身后那盏不算明亮的灯。</p><p id="p-3" data-paragraph="3">　手机响了一声，是朋友问他搬家顺不顺利。他看着还堆在墙边的箱子，回复：“还没弄完，但已经可以住了。”</p><p id="p-4" data-paragraph="4">　消息发出去以后，他想了想，又添了一句：“今天找到一家不错的书店。”</p><p id="p-5" data-paragraph="5">　朋友很快回了一个笑脸，说下次去看他。他便记下街角小店的名字，决定到时候一起在那里吃饭。</p><p id="p-6" data-paragraph="6">　吃完面，他洗净碗，把桌子擦干。书的牛皮纸包装被仔细拆开，折好，放在抽屉里。那张旧车票仍夹在诗集的第十二页。</p><p id="p-7" data-paragraph="7">　他没有把车票取出来。它可以继续待在那里，作为另一个人、另一个下午留下的小小标记。现在，书已经有了新的读者。</p><p id="p-8" data-paragraph="8">　楼下有人关上卷帘门，铁片碰撞的声音沿街传来。再远一点，是公交车停站的提示音。城市用这些寻常的声响，慢慢收好了白天。</p><p id="p-9" data-paragraph="9">　林舟拉开窗帘，看见对面楼里一扇一扇亮起来的窗。每一扇窗后面，大概都有人在准备晚饭、收拾房间，或者给远方的人写一条消息。</p><p id="p-10" data-paragraph="10">　他打开诗集，接着读下午没有读完的那一页。风从窗边经过，纸张轻轻动了动，却没有翻过去。</p><p id="p-11" data-paragraph="11">　这一回，他知道自己可以慢慢读。</p><p id="p-12" data-paragraph="12">（示例完）</p></article><nav class="chapter-navigation" aria-label="章节切换"><a class="quiet-button" href="/c/002/" rel="prev">上一话</a><button type="button" class="text-button" data-open="chapter-menu">目录</button><a class="primary-button" href="/">读完了 · 回目录</a></nav><footer class="site-footer"><span>Yomii</span><button class="text-button" type="button" data-open="privacy">关于本站</button></footer></main><button id="exit-focus" class="quiet-button" type="button" aria-label="退出专注模式">退出专注</button><button id="back-top" class="quiet-button" type="button" hidden aria-label="返回顶部">顶部</button><dialog id="chapter-menu" class="library-dialog" aria-labelledby="library-title"><div class="dialog-head"><h2 id="library-title">风经过的地方</h2><button type="button" data-close="chapter-menu" class="icon-button" aria-label="关闭">×</button></div><div class="library-tabs" role="tablist" aria-label="目录与书签"><button id="tab-chapters" role="tab" aria-selected="true" aria-controls="panel-chapters" type="button" data-library-tab="chapters">目录</button><button id="tab-bookmarks" role="tab" aria-selected="false" aria-controls="panel-bookmarks" tabindex="-1" type="button" data-library-tab="bookmarks">书签 <span id="bookmark-count"></span></button></div><section id="panel-chapters" role="tabpanel" aria-labelledby="tab-chapters"><label class="sr-only" for="chapter-search">搜索章节</label><input id="chapter-search" type="search" placeholder="搜索章节..." autocomplete="off"><nav aria-label="章节目录"><ol class="chapter-list"><li><a data-chapter-link data-search="第1话 午后的旧书店 1" href="/c/001/"><span class="chapter-number">01</span><span>午后的旧书店</span></a></li><li><a data-chapter-link data-search="第2话 沿河走一段 2" href="/c/002/"><span class="chapter-number">02</span><span>沿河走一段</span></a></li><li><a data-chapter-link data-search="第3话 灯亮起来的时候 3" href="/c/003/" aria-current="page"><span class="chapter-number">03</span><span>灯亮起来的时候</span></a></li></ol></nav><p id="no-chapters" class="empty-note" hidden>未找到匹配章节</p></section><section id="panel-bookmarks" role="tabpanel" aria-labelledby="tab-bookmarks" hidden><div id="bookmark-list"></div></section></dialog><dialog id="settings" aria-labelledby="settings-title"><div class="dialog-head"><h2 id="settings-title">阅读设置</h2><button type="button" data-close="settings" aria-label="关闭" class="icon-button">×</button></div><fieldset><legend>页面颜色</legend><div class="theme-options"><button data-theme-choice="auto" class="theme-swatch auto" type="button">随系统</button><button data-theme-choice="light" class="theme-swatch light" type="button">清白</button><button data-theme-choice="paper" class="theme-swatch paper" type="button">纸色</button><button data-theme-choice="dark" class="theme-swatch dark" type="button">夜读</button></div></fieldset><label class="range-label" for="font-size">字号 <output id="font-value">20 px</output></label><input id="font-size" type="range" min="16" max="30" value="20" step="1"><label class="range-label" for="line-height">行距 <output id="line-value">1.9</output></label><input id="line-height" type="range" min="1.5" max="2.5" value="1.9" step="0.1"><label class="range-label" for="reading-width">正文宽度 <output id="width-value">720 px</output></label><input id="reading-width" type="range" min="560" max="960" value="720" step="40"><fieldset><legend>正文字体</legend><div class="font-options"><button type="button" data-font="serif">宋体</button><button type="button" data-font="sans">黑体</button></div></fieldset><button class="text-button" type="button" id="reset-settings">恢复默认设置</button><p class="settings-note">快捷键：← / → 翻页，F 专注模式，Esc 退出</p></dialog><dialog id="privacy" aria-labelledby="privacy-title"><div class="dialog-head"><h2 id="privacy-title">关于本站</h2><button type="button" data-close="privacy" aria-label="关闭" class="icon-button">×</button></div><p>本站收录《风经过的地方》。</p><p>阅读进度、书签和偏好设置均保存在本地浏览器中。</p></dialog><div class="toast" role="status" id="toast" hidden><span id="toast-text"></span><button type="button" id="undo-bookmark" hidden>撤销</button></div><script type="module" src="/_astro/Layout.astro_astro_type_script_index_0_lang.U2fz_xXd.js"></script></body></html>
