@@ -1,0 +1,16 @@
+# 将 read.example.com 改成你的域名；把 dist 上传到 /srv/yomii/dist。
+read.example.com {
+    root * /srv/yomii/dist
+    encode zstd gzip
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy no-referrer
+        X-Frame-Options DENY
+        Cache-Control "no-cache"
+    }
+    file_server
+    handle_errors {
+        rewrite * /404.html
+        file_server
+    }
+}
