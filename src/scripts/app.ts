@@ -635,9 +635,7 @@ interface Bookmark extends Position {
   function toggleFocus(force?: boolean) {
     const next = typeof force === 'boolean' ? force : !prefs.focus;
     setPrefs({ ...prefs, focus: next });
-    requestAnimationFrame(() =>
-      $(next ? 'exit-focus' : 'focus-toggle')?.focus({ preventScroll: true })
-    );
+    (document.activeElement as HTMLElement)?.blur?.();
   }
 
   $('focus-toggle')?.addEventListener('click', () => toggleFocus());
@@ -683,19 +681,20 @@ interface Bookmark extends Position {
       document.querySelector('dialog[open]')
     )
       return;
-    const target = e.target as HTMLElement | null;
-    const interactive = target?.closest?.(
-      'input,textarea,select,button,a,summary,[contenteditable=true]'
-    );
     if (e.key === 'Escape' && prefs.focus) {
       e.preventDefault();
       toggleFocus(false);
       return;
     }
-    if (interactive) return;
+    const target = e.target as HTMLElement | null;
+    const isTextInput = target?.closest(
+      'input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]),textarea,select,[contenteditable="true"]'
+    );
+    if (isTextInput) return;
     if (e.key === 'f' || e.key === 'F') {
       e.preventDefault();
       toggleFocus();
+      return;
     }
     if (e.key === 'ArrowLeft' && chapter > 1) {
       e.preventDefault();

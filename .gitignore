@@ -2,6 +2,10 @@
 dist/
 public/downloads/
 
+# Novel source files (only the default demo novel is tracked)
+content/*
+!content/novel.txt
+
 # Dependencies
 node_modules/
 
