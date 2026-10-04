@@ -95,13 +95,56 @@ bun run import ./my-novel.txt --title "书名" --author "作者" --site-name "�
 
 ## 部署方案
 
-### 方案 A：Cloudflare Pages / Vercel（推荐）
+本项目支持自动一键部署与手动部署两种方式。
+
+### 1. 自动部署（推荐）
+
+通过交互式向导或指定参数实现一键构建与部署：
+
+```sh
+bun run deploy
+```
+
+亦可通过命令行参数直接执行非交互部署：
+
+```sh
+# 部署至 Cloudflare Pages（可选自定义域名）
+bun run deploy --target cloudflare --project my-reader --domain read.example.com
+
+# 部署至 Vercel（可选自定义域名）
+bun run deploy --target vercel --domain read.example.com
+
+# 部署至 GitHub Pages（可选自定义域名）
+bun run deploy --target github --domain read.example.com
+```
+
+#### 前置依赖与认证说明
+
+| 平台 | CLI 工具 | 未安装时的降级方案 | 认证前置要求 |
+| :--- | :--- | :--- | :--- |
+| **Cloudflare Pages** | `wrangler` | 自动通过 `bunx wrangler` 调用 | 需完成 Cloudflare 账号登录（`wrangler login`） |
+| **Vercel** | `vercel` | 自动通过 `bunx vercel` 调用 | 需完成 Vercel 账号登录（`vercel login`） |
+| **GitHub Pages** | `gh` / `gh-pages` | 自动通过 `bunx gh-pages` 调用 | 需绑定远程仓库 `origin`，推荐安装 `gh`（`gh auth login`） |
+
+*注：若选择使用自有域名，脚本会自动生成 `CNAME` 配置并打印对应的 DNS 解析记录指引。*
+
+---
+
+### 2. 手动部署
+
+若希望通过 Git 平台 CI/CD 或自行托管服务器，可参考以下配置：
+
+#### 方案 A：Cloudflare Pages / Vercel
 
 1. 连接 Git 仓库。
 2. 构建命令填 `bun run build`，输出目录填 `dist`。
 3. 项目已在 `public/_headers` 中预置了适用于 Cloudflare Pages 的安全标头与缓存策略。
 
-### 方案 B：独立服务器（Caddy / Nginx）
+#### 方案 B：GitHub Pages
+
+在仓库设置中启用 GitHub Pages，选择 `gh-pages` 分支作为来源，或配置 GitHub Actions 构建 `dist/` 目录。
+
+#### 方案 C：独立服务器（Caddy / Nginx）
 
 将 `dist/` 目录中的全部文件上传到 Web 服务器根目录即可：
 

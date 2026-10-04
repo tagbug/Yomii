@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "test": "bun test",
-    "import": "bun run scripts/import-novel.ts"
+    "import": "bun run scripts/import-novel.ts",
+    "deploy": "bun run scripts/deploy.ts"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
