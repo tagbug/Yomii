@@ -7,8 +7,9 @@ const novel = getNovelData();
 
 // Sync novel download file to public/downloads/
 const publicDownloadsDir = path.resolve('./public/downloads');
+fs.rmSync(publicDownloadsDir, { recursive: true, force: true });
 fs.mkdirSync(publicDownloadsDir, { recursive: true });
-const sourceFilePath = path.resolve(novel.sourceFileName === 'novel.txt' ? 'content/novel.txt' : novel.sourceFileName);
+const sourceFilePath = novel.sourcePath;
 fs.copyFileSync(sourceFilePath, path.join(publicDownloadsDir, novel.sourceFileName));
 
 export default defineConfig({

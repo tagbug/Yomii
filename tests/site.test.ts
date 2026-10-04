@@ -24,7 +24,7 @@ test('static build files exist', () => {
 });
 
 test('TXT download matches source novel byte-for-byte', () => {
-  const sourcePath = path.join(ROOT, 'content', 'novel.txt');
+  const sourcePath = novel.sourcePath;
   const downloadPath = path.join(DIST, 'downloads', novel.sourceFileName);
 
   expect(fs.existsSync(downloadPath)).toBe(true);

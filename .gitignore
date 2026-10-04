@@ -1,5 +1,6 @@
-# Build output
+# Build output & synced downloads
 dist/
+public/downloads/
 
 # Dependencies
 node_modules/
