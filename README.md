@@ -114,7 +114,10 @@ bun run deploy --target cloudflare --project my-reader --domain read.example.com
 # 部署至 Vercel（可选自定义域名）
 bun run deploy --target vercel --domain read.example.com
 
-# 部署至 GitHub Pages（可选自定义域名）
+# 部署至 GitHub Pages（自动识别仓库名子路径并注入 .nojekyll）
+bun run deploy --target github
+
+# 部署至 GitHub Pages（使用自定义域名，自动以根路径构建并配置 CNAME）
 bun run deploy --target github --domain read.example.com
 ```
 
@@ -126,7 +129,7 @@ bun run deploy --target github --domain read.example.com
 | **Vercel** | `vercel` | 自动通过 `bunx vercel` 调用 | 需完成 Vercel 账号登录（`vercel login`） |
 | **GitHub Pages** | `gh` / `gh-pages` | 自动通过 `bunx gh-pages` 调用 | 需绑定远程仓库 `origin`，推荐安装 `gh`（`gh auth login`） |
 
-*注：若选择使用自有域名，脚本会自动生成 `CNAME` 配置并打印对应的 DNS 解析记录指引。*
+*注：GitHub Pages 部署脚本会自动检测远程仓库名并设定匹配的基础子路径（如 `/Yomii`），预置 `.nojekyll` 避免 Jekyll 屏蔽 `_astro` 目录；若指定了自定义域名，则会自动按根路径部署并写入 `CNAME`。*
 
 ---
 
@@ -142,7 +145,9 @@ bun run deploy --target github --domain read.example.com
 
 #### 方案 B：GitHub Pages
 
-在仓库设置中启用 GitHub Pages，选择 `gh-pages` 分支作为来源，或配置 GitHub Actions 构建 `dist/` 目录。
+1. 在仓库设置中启用 GitHub Pages，选择 `gh-pages` 分支作为来源，或配置 GitHub Actions 构建 `dist/` 目录。
+2. **子路径适配**：若部署在默认的 GitHub Pages 子路径（如 `https://<username>.github.io/<repo>/`），构建时需传入环境变量 `BASE_PATH=/<repo> bun run build`（或在 `config.json` 中配置 `"base_path": "/<repo>"`）。若使用自有域名，则保持根路径 `""` 即可。
+3. 项目已在 `public/.nojekyll` 中预置空文件，确保 GitHub Pages 不会过滤 `_astro/` 资源目录。
 
 #### 方案 C：独立服务器（Caddy / Nginx）
 

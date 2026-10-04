@@ -95,7 +95,8 @@ export function getNovelData(rootDir = process.cwd()): NovelData {
   }
 
   const siteName = config.site_name || 'Yomii';
-  const rawBasePath = (config.base_path || '').trim().replace(/^\/|\/$/g, '');
+  const envBasePath = process.env.BASE_PATH;
+  const rawBasePath = (envBasePath !== undefined ? envBasePath : config.base_path || '').trim().replace(/^\/|\/$/g, '');
   const basePath = rawBasePath ? `/${rawBasePath}` : '';
 
   let title = (config.book_title || '').trim();

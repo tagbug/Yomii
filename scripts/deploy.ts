@@ -10,6 +10,7 @@ interface DeployOptions {
   target?: DeployTarget;
   project?: string;
   domain?: string;
+  basePath?: string;
   noBuild?: boolean;
 }
 
@@ -35,6 +36,7 @@ Options:
   --target <name>      Deployment target: cloudflare, vercel, github
   --project <name>     Project name (defaults to site_name in config.json or "yomii")
   --domain <domain>    Custom domain (e.g. "read.example.com")
+  --base-path <path>   Explicit base path (defaults to auto-detected or "")
   --no-build           Skip automatic build before deploying
   -h, --help           Show this help message
 
@@ -42,6 +44,7 @@ Examples:
   bun run deploy
   bun run deploy --target cloudflare --project my-reader --domain read.example.com
   bun run deploy --target vercel
+  bun run deploy --target github
   bun run deploy --target github --domain read.example.com
 `);
 }
@@ -65,12 +68,24 @@ function resolveCli(primary: string, pkg: string): string[] {
   return ['bunx', pkg];
 }
 
-function runCommand(cmd: string[], opts?: { ignoreError?: boolean }): number {
+function parseGitHubRepo(remoteUrl: string): { owner: string; repo: string } | null {
+  const match = remoteUrl.match(/[:/]([^/:]+)\/([^/:]+?)(?:\.git)?$/);
+  if (match) {
+    return { owner: match[1], repo: match[2] };
+  }
+  return null;
+}
+
+function runCommand(
+  cmd: string[],
+  opts?: { ignoreError?: boolean; env?: Record<string, string> }
+): number {
   console.log(`$ ${cmd.join(' ')}`);
   const proc = Bun.spawnSync(cmd, {
     stdin: 'inherit',
     stdout: 'inherit',
     stderr: 'inherit',
+    env: opts?.env ? { ...process.env, ...opts.env } : process.env,
   });
   if (proc.exitCode !== 0 && !opts?.ignoreError) {
     console.error(`Error: command failed with exit code ${proc.exitCode}`);
@@ -103,9 +118,13 @@ function sanitizeProjectName(name: string): string {
   return cleaned || 'yomii';
 }
 
-function buildProject(): boolean {
+function buildProject(basePath?: string): boolean {
   console.log('\n--- Building static site ---');
-  const code = runCommand(['bun', 'run', 'build']);
+  const env: Record<string, string> = {};
+  if (basePath !== undefined) {
+    env.BASE_PATH = basePath;
+  }
+  const code = runCommand(['bun', 'run', 'build'], { env });
   if (code !== 0) {
     console.error('Build failed. Aborting deployment.');
     return false;
@@ -251,8 +270,14 @@ async function deployGitHub(domain: string | undefined): Promise<void> {
   const remoteUrl = remoteCheck.stdout.trim();
   console.log(`Target repository: ${remoteUrl}`);
 
+  // Ensure .nojekyll exists so GitHub Pages serves _astro assets
+  fs.writeFileSync(path.join(DIST, '.nojekyll'), '', 'utf-8');
+
+  const cnameFile = path.join(DIST, 'CNAME');
   if (domain) {
-    fs.writeFileSync(path.join(DIST, 'CNAME'), domain.trim(), 'utf-8');
+    fs.writeFileSync(cnameFile, domain.trim(), 'utf-8');
+  } else if (fs.existsSync(cnameFile)) {
+    fs.unlinkSync(cnameFile);
   }
 
   const cli = resolveCli('gh-pages', 'gh-pages');
@@ -283,7 +308,12 @@ async function deployGitHub(domain: string | undefined): Promise<void> {
     console.log(`  Name:  ${domain}`);
     console.log('  Target: <username>.github.io');
   } else {
-    console.log('Site will be available at your GitHub Pages URL (check repository settings > Pages).');
+    const repoInfo = parseGitHubRepo(remoteUrl);
+    if (repoInfo) {
+      console.log(`Site URL: https://${repoInfo.owner}.github.io/${repoInfo.repo}/`);
+    } else {
+      console.log('Site will be available at your GitHub Pages URL (check repository settings > Pages).');
+    }
   }
 }
 
@@ -309,6 +339,8 @@ async function parseArgs(): Promise<DeployOptions> {
       options.project = args[++i];
     } else if (arg === '--domain' && i + 1 < args.length) {
       options.domain = args[++i];
+    } else if (arg === '--base-path' && i + 1 < args.length) {
+      options.basePath = args[++i];
     } else if (arg === '--no-build') {
       options.noBuild = true;
     }
@@ -320,12 +352,13 @@ async function parseArgs(): Promise<DeployOptions> {
 async function promptInteractive(
   opts: DeployOptions,
   config: Record<string, any>
-): Promise<Required<Omit<DeployOptions, 'domain'>> & { domain?: string }> {
+): Promise<Required<Omit<DeployOptions, 'domain' | 'basePath'>> & { domain?: string; basePath?: string }> {
   const isTTY = process.stdin.isTTY && process.stdout.isTTY;
 
   let target = opts.target;
   let project = opts.project;
   let domain = opts.domain;
+  let basePath = opts.basePath;
   let noBuild = opts.noBuild || false;
 
   if (!isTTY) {
@@ -339,6 +372,7 @@ async function promptInteractive(
       target,
       project: project || defaultProj,
       domain,
+      basePath,
       noBuild,
     };
   }
@@ -395,6 +429,7 @@ async function promptInteractive(
     target,
     project: project || sanitizeProjectName(config.site_name || 'yomii'),
     domain,
+    basePath,
     noBuild,
   };
 }
@@ -404,8 +439,33 @@ async function main() {
   const config = loadConfig();
   const options = await promptInteractive(parsed, config);
 
+  // Compute basePath if not overridden
+  let basePath = options.basePath;
+  if (basePath === undefined) {
+    if (options.target === 'github') {
+      if (options.domain) {
+        basePath = '';
+      } else {
+        const remoteCheck = runSilent(['git', 'remote', 'get-url', 'origin']);
+        if (remoteCheck.exitCode === 0 && remoteCheck.stdout) {
+          const repoInfo = parseGitHubRepo(remoteCheck.stdout.trim());
+          if (repoInfo) {
+            const isUserRoot = repoInfo.repo.toLowerCase() === `${repoInfo.owner.toLowerCase()}.github.io`;
+            basePath = isUserRoot ? '' : `/${repoInfo.repo}`;
+          }
+        }
+      }
+    } else {
+      basePath = options.domain ? '' : (config.base_path || '');
+    }
+  }
+
+  if (basePath !== undefined && basePath !== '') {
+    console.log(`Configured deployment base path: "${basePath}"`);
+  }
+
   if (!options.noBuild) {
-    const ok = buildProject();
+    const ok = buildProject(basePath);
     if (!ok) process.exit(1);
   }
 
