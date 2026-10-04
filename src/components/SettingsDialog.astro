@@ -1,0 +1,47 @@
+---
+---
+
+<dialog id="settings" aria-labelledby="settings-title">
+  <div class="dialog-head">
+    <h2 id="settings-title">阅读设置</h2>
+    <button
+      type="button"
+      data-close="settings"
+      aria-label="关闭阅读设置"
+      class="icon-button"
+    >×</button>
+  </div>
+  <fieldset>
+    <legend>页面颜色</legend>
+    <div class="theme-options">
+      <button data-theme-choice="auto" class="theme-swatch auto" type="button">随系统</button>
+      <button data-theme-choice="light" class="theme-swatch light" type="button">清白</button>
+      <button data-theme-choice="paper" class="theme-swatch paper" type="button">纸色</button>
+      <button data-theme-choice="dark" class="theme-swatch dark" type="button">夜读</button>
+    </div>
+  </fieldset>
+  <label class="range-label" for="font-size">
+    字号 <output id="font-value">20 px</output>
+  </label>
+  <input id="font-size" type="range" min="16" max="30" value="20" step="1" />
+  <label class="range-label" for="line-height">
+    行距 <output id="line-value">1.9</output>
+  </label>
+  <input id="line-height" type="range" min="1.5" max="2.5" value="1.9" step="0.1" />
+  <label class="range-label" for="reading-width">
+    正文宽度 <output id="width-value">720 px</output>
+  </label>
+  <input id="reading-width" type="range" min="560" max="960" value="720" step="40" />
+  <fieldset>
+    <legend>正文字体</legend>
+    <div class="font-options">
+      <button type="button" data-font="serif">宋体</button>
+      <button type="button" data-font="sans">黑体</button>
+    </div>
+  </fieldset>
+  <button class="text-button" type="button" id="reset-settings">恢复默认设置</button>
+  <p class="settings-note">
+    左右方向键切换章节，F 开启专注，Esc 退出。<br />
+    设置、进度与书签保存在此浏览器。
+  </p>
+</dialog>

@@ -1,0 +1,23 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<dialog id="privacy" aria-labelledby="privacy-title">
+  <div class="dialog-head">
+    <h2 id="privacy-title">关于本站</h2>
+    <button
+      type="button"
+      data-close="privacy"
+      aria-label="关闭关于本站"
+      class="icon-button"
+    >×</button>
+  </div>
+  <p>本站收录《{title}》。</p>
+  <p>无需注册。阅读进度、书签和设置仅保存在当前浏览器，不会跨设备同步；清除浏览器数据后会重置。</p>
+  <p>纯静态轻量架构，零第三方依赖与外部追踪，保障纯粹沉浸的阅读体验。</p>
+  <p>TXT 下载与本站收录的文本文件逐字节一致。</p>
+</dialog>

@@ -1,0 +1,12 @@
+---
+interface Props {
+  siteName: string;
+}
+
+const { siteName } = Astro.props;
+---
+
+<footer class="site-footer">
+  <span>{siteName}</span>
+  <button class="text-button" type="button" data-open="privacy">关于本站</button>
+</footer>

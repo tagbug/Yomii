@@ -1,0 +1,138 @@
+---
+import type { Group, Chapter } from '../lib/novel';
+import LibraryDialog from '../components/LibraryDialog.astro';
+import SettingsDialog from '../components/SettingsDialog.astro';
+import PrivacyDialog from '../components/PrivacyDialog.astro';
+import Toast from '../components/Toast.astro';
+import '../styles/style.css';
+
+interface Props {
+  pageTitle: string;
+  siteName: string;
+  description: string;
+  bodyClass: 'home' | 'reader';
+  bookId: string;
+  totalChapters: number;
+  basePath: string;
+  chapterNumber?: number;
+  chapterTitle?: string;
+  novelTitle: string;
+  groups: Group[];
+  chapters: Chapter[];
+}
+
+const {
+  pageTitle,
+  siteName,
+  description,
+  bodyClass,
+  bookId,
+  totalChapters,
+  basePath,
+  chapterNumber = 0,
+  chapterTitle = '',
+  novelTitle,
+  groups,
+  chapters,
+} = Astro.props;
+
+const FAVICON_DATA =
+  'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%235265a5%22%2F%3E%3Cpath%20d%3D%22M8%207h12a4%204%200%200%201%204%204v15H12a4%204%200%200%201-4-4V7Zm4%200v19%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%2F%3E%3Cpath%20d%3D%22M16%2012h5m-5%205h5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.5%22%2F%3E%3C%2Fsvg%3E';
+---
+
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'"
+    />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <title>{pageTitle} · {siteName}</title>
+    <link rel="icon" type="image/svg+xml" href={FAVICON_DATA} />
+
+    <!-- Synchronous preferences initialization to avoid FOUC -->
+    <script is:inline>
+      (() => {
+        'use strict';
+        const defaults = { theme: 'auto', size: 20, line: 1.9, width: 720, font: 'serif', focus: false };
+        const fonts = {
+          serif: '"Noto Serif CJK SC","Source Han Serif SC","Songti SC",SimSun,serif',
+          sans: '"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif',
+        };
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const safeNumber = (n, low, high, fallback) =>
+          typeof n === 'number' && Number.isFinite(n) ? Math.max(low, Math.min(high, n)) : fallback;
+        function normalize(v = {}) {
+          if (!v || typeof v !== 'object') v = {};
+          return {
+            theme: ['auto', 'light', 'paper', 'dark'].includes(v.theme) ? v.theme : defaults.theme,
+            size: safeNumber(v.size, 16, 30, 20),
+            line: safeNumber(v.line, 1.5, 2.5, 1.9),
+            width: safeNumber(v.width, 560, 960, 720),
+            font: v.font === 'sans' ? 'sans' : 'serif',
+            focus: v.focus === true,
+          };
+        }
+        function read(key) {
+          try {
+            return JSON.parse(localStorage.getItem(key));
+          } catch {
+            return null;
+          }
+        }
+        function write(key, value) {
+          try {
+            localStorage.setItem(key, JSON.stringify(value));
+            return true;
+          } catch {
+            return false;
+          }
+        }
+        function apply(value) {
+          const p = normalize(value),
+            root = document.documentElement;
+          root.dataset.theme = p.theme === 'auto' ? (systemTheme.matches ? 'dark' : 'light') : p.theme;
+          root.dataset.focus = String(p.focus);
+          root.style.setProperty('--reader-size', `${p.size}px`);
+          root.style.setProperty('--reader-line', String(p.line));
+          root.style.setProperty('--reader-width', `${p.width}px`);
+          root.style.setProperty('--reader-font', fonts[p.font]);
+          return p;
+        }
+        const api = (window.ReaderPreferences = { defaults, read, write, normalize, apply });
+        api.current = apply(read('yomii-preferences-v1'));
+        systemTheme.addEventListener('change', () => {
+          if (api.current.theme === 'auto') apply(api.current);
+        });
+      })();
+    </script>
+  </head>
+  <body
+    class={bodyClass}
+    data-base-path={basePath}
+    data-total-chapters={totalChapters}
+    data-book-id={bookId}
+    data-chapter={chapterNumber > 0 ? chapterNumber : undefined}
+    data-chapter-title={chapterTitle || undefined}
+  >
+    <slot />
+
+    <LibraryDialog
+      title={novelTitle}
+      groups={groups}
+      chapters={chapters}
+      currentChapter={chapterNumber}
+      basePath={basePath}
+    />
+    <SettingsDialog />
+    <PrivacyDialog title={novelTitle} />
+    <Toast />
+
+    <script src="../scripts/app.ts"></script>
+  </body>
+</html>

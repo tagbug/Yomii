@@ -1,0 +1,66 @@
+---
+import type { Group, Chapter } from '../lib/novel';
+import ChapterToc from './ChapterToc.astro';
+
+interface Props {
+  title: string;
+  groups: Group[];
+  chapters: Chapter[];
+  currentChapter?: number;
+  basePath?: string;
+}
+
+const { title, groups, chapters, currentChapter = 0, basePath = '' } = Astro.props;
+---
+
+<dialog id="chapter-menu" class="library-dialog" aria-labelledby="library-title">
+  <div class="dialog-head">
+    <h2 id="library-title">{title}</h2>
+    <button
+      type="button"
+      data-close="chapter-menu"
+      class="icon-button"
+      aria-label="关闭目录与书签"
+    >×</button>
+  </div>
+  <div class="library-tabs" role="tablist" aria-label="阅读记录">
+    <button
+      id="tab-chapters"
+      role="tab"
+      aria-selected="true"
+      aria-controls="panel-chapters"
+      type="button"
+      data-library-tab="chapters"
+    >目录</button>
+    <button
+      id="tab-bookmarks"
+      role="tab"
+      aria-selected="false"
+      aria-controls="panel-bookmarks"
+      tabindex="-1"
+      type="button"
+      data-library-tab="bookmarks"
+    >书签 <span id="bookmark-count"></span></button>
+  </div>
+  <section id="panel-chapters" role="tabpanel" aria-labelledby="tab-chapters">
+    <label class="sr-only" for="chapter-search">搜索章节名称或序号</label>
+    <input
+      id="chapter-search"
+      type="search"
+      placeholder="搜索章节名称或序号"
+      autocomplete="off"
+    />
+    <nav aria-label="章节目录">
+      <ChapterToc
+        groups={groups}
+        chapters={chapters}
+        currentChapter={currentChapter}
+        basePath={basePath}
+      />
+    </nav>
+    <p id="no-chapters" class="empty-note" hidden>没有找到匹配的章节</p>
+  </section>
+  <section id="panel-bookmarks" role="tabpanel" aria-labelledby="tab-bookmarks" hidden>
+    <div id="bookmark-list"></div>
+  </section>
+</dialog>

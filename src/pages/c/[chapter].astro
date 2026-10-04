@@ -1,0 +1,143 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { getNovelData } from '../../lib/novel';
+
+export function getStaticPaths() {
+  const novel = getNovelData();
+  return novel.chapters.map((c) => ({
+    params: {
+      chapter: String(c.number).padStart(3, '0'),
+    },
+    props: {
+      chapter: c,
+      novel,
+    },
+  }));
+}
+
+const { chapter, novel } = Astro.props;
+const n = chapter.number;
+const total = novel.totalChapters;
+
+function chapterUrl(num: number) {
+  return `${novel.basePath}/c/${String(num).padStart(3, '0')}/`;
+}
+
+const homeUrl = `${novel.basePath}/`;
+---
+
+<Layout
+  pageTitle={`${chapter.heading} · ${novel.title}`}
+  siteName={novel.siteName}
+  description={`${novel.title}，${novel.totalChapters}话。简洁阅读、章节目录、书签与TXT下载。`}
+  bodyClass="reader"
+  bookId={novel.bookId}
+  totalChapters={novel.totalChapters}
+  basePath={novel.basePath}
+  chapterNumber={n}
+  chapterTitle={chapter.heading}
+  novelTitle={novel.title}
+  groups={novel.groups}
+  chapters={novel.chapters}
+>
+  <a class="skip-link" href="#story">跳到正文</a>
+
+  <div
+    class="scroll-progress"
+    role="progressbar"
+    aria-label="本话阅读进度"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-valuenow="0"
+  >
+    <div id="progress-bar"></div>
+  </div>
+
+  <header class="reader-toolbar">
+    <div class="toolbar-left">
+      <a class="toolbar-home brand" href={homeUrl}>{novel.siteName}</a>
+      <button class="quiet-button" type="button" data-open="chapter-menu">目录</button>
+      <span id="chapter-progress" class="toolbar-progress">
+        {n} / {total} · 0%
+      </span>
+    </div>
+    <div class="toolbar-actions">
+      <button
+        class="quiet-button"
+        type="button"
+        id="bookmark"
+        title="保存当前位置，在目录中查看书签"
+      >书签</button>
+      <button
+        class="quiet-button"
+        type="button"
+        id="focus-toggle"
+        aria-pressed="false"
+        title="专注阅读（F）"
+      >专注</button>
+      <button
+        class="quiet-button settings-trigger"
+        type="button"
+        data-open="settings"
+        aria-label="阅读设置"
+      >Aa</button>
+    </div>
+  </header>
+
+  <main id="main" class="reading-main">
+    <div class="chapter-heading">
+      <p class="chapter-index">第 {String(n).padStart(2, '0')} 话</p>
+      <h1>{chapter.title}</h1>
+      <span class="chapter-meta">
+        {chapter.chars.toLocaleString()} 字 · 约 {chapter.readMinutes} 分钟
+      </span>
+    </div>
+
+    <article id="story" class="story" aria-label={chapter.heading}>
+      {
+        chapter.paragraphs.map((p, j) => (
+          <p id={`p-${j}`} data-paragraph={j}>
+            {p}
+          </p>
+        ))
+      }
+    </article>
+
+    <nav class="chapter-navigation" aria-label="章节切换">
+      {
+        n > 1 ? (
+          <a class="quiet-button" href={chapterUrl(n - 1)} rel="prev">
+            上一话
+          </a>
+        ) : (
+          <span class="quiet-button disabled" aria-disabled="true">
+            上一话
+          </span>
+        )
+      }
+      <button type="button" class="text-button" data-open="chapter-menu">目录</button>
+      {
+        n < total ? (
+          <a class="primary-button" href={chapterUrl(n + 1)} rel="next">
+            下一话
+          </a>
+        ) : (
+          <a class="primary-button" href={homeUrl}>
+            读完了 · 回目录
+          </a>
+        )
+      }
+    </nav>
+
+    <p class="reading-status" id="reading-status">阅读进度自动保存</p>
+    <SiteFooter siteName={novel.siteName} />
+  </main>
+
+  <button id="exit-focus" class="quiet-button" type="button" aria-label="退出专注模式">
+    退出专注
+  </button>
+  <button id="back-top" class="quiet-button" type="button" hidden aria-label="返回本话开头">
+    顶部
+  </button>
+</Layout>

@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getNovelData } from '../lib/novel';
+
+const novel = getNovelData();
+const homeUrl = `${novel.basePath}/`;
+---
+
+<Layout
+  pageTitle="页面未找到"
+  siteName={novel.siteName}
+  description={`${novel.title} - 页面未找到`}
+  bodyClass="home"
+  bookId={novel.bookId}
+  totalChapters={novel.totalChapters}
+  basePath={novel.basePath}
+  novelTitle={novel.title}
+  groups={novel.groups}
+  chapters={novel.chapters}
+>
+  <main class="home-main" style="padding-top: 60px; text-align: center;">
+    <h1>这一页没有找到</h1>
+    <a class="primary-button" href={homeUrl}>返回目录</a>
+  </main>
+</Layout>

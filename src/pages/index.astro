@@ -1,0 +1,61 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ChapterToc from '../components/ChapterToc.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { getNovelData } from '../lib/novel';
+
+const novel = getNovelData();
+const downloadUrl = `${novel.basePath}/downloads/${encodeURIComponent(novel.sourceFileName)}`;
+const firstChapterUrl = `${novel.basePath}/c/001/`;
+const homeUrl = `${novel.basePath}/`;
+---
+
+<Layout
+  pageTitle={novel.title}
+  siteName={novel.siteName}
+  description={`${novel.title}，${novel.totalChapters}话。简洁阅读、章节目录、书签与TXT下载。`}
+  bodyClass="home"
+  bookId={novel.bookId}
+  totalChapters={novel.totalChapters}
+  basePath={novel.basePath}
+  novelTitle={novel.title}
+  groups={novel.groups}
+  chapters={novel.chapters}
+>
+  <a class="skip-link" href="#main">跳到正文</a>
+  <header class="home-header">
+    <a href={homeUrl} class="brand">{novel.siteName}</a>
+    <button class="quiet-button" type="button" data-open="settings">阅读设置</button>
+  </header>
+  <main id="main" class="home-main">
+    <section class="book-intro">
+      <h1>{novel.title}</h1>
+      <p class="book-author">
+        {novel.author ? `${novel.author} · ` : ''}{novel.totalChapters} 话
+      </p>
+      <div class="book-actions">
+        <a class="primary-button" href={firstChapterUrl} id="continue-reading">开始阅读</a>
+        <a class="quiet-button" href={downloadUrl} download={novel.sourceFileName}>下载 TXT</a>
+        <button
+          class="text-button"
+          type="button"
+          id="home-bookmarks"
+          data-open="chapter-menu"
+          data-panel="bookmarks"
+          hidden
+        >书签</button>
+      </div>
+      <p id="resume-note" class="resume-note" hidden></p>
+      <a id="start-over" class="text-link restart-link" href={`${firstChapterUrl}#start`} hidden>从头阅读</a>
+    </section>
+    <section class="contents" aria-labelledby="contents-title">
+      <h2 id="contents-title">目录</h2>
+      <ChapterToc
+        groups={novel.groups}
+        chapters={novel.chapters}
+        basePath={novel.basePath}
+      />
+    </section>
+    <SiteFooter siteName={novel.siteName} />
+  </main>
+</Layout>

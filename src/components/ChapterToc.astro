@@ -1,0 +1,48 @@
+---
+import type { Group, Chapter } from '../lib/novel';
+
+interface Props {
+  groups: Group[];
+  chapters: Chapter[];
+  currentChapter?: number;
+  basePath?: string;
+}
+
+const { groups, chapters, currentChapter = 0, basePath = '' } = Astro.props;
+
+function chapterUrl(num: number) {
+  return `${basePath}/c/${String(num).padStart(3, '0')}/`;
+}
+---
+
+{
+  groups.map((g) => {
+    const groupChapters = chapters.filter((c) => c.group === g.index);
+    const content = (
+      <ol class="chapter-list">
+        {groupChapters.map((c) => (
+          <li>
+            <a
+              data-chapter-link
+              data-search={`${c.heading} ${c.number}`}
+              href={chapterUrl(c.number)}
+              aria-current={c.number === currentChapter ? 'page' : undefined}
+            >
+              <span class="chapter-number">{String(c.number).padStart(2, '0')}</span>
+              <span>{c.title}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    );
+
+    return groups.length === 1 ? (
+      content
+    ) : (
+      <details class="track" open>
+        <summary>{g.name}</summary>
+        {content}
+      </details>
+    );
+  })
+}
